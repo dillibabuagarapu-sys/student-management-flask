@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Management</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container mt-5">
+
+    <div class="d-flex justify-content-between">
+    <h2>🎓 Student Management Dashboard</h2>
+    <a href="/logout" class="btn btn-danger">Logout</a>
+</div>
+
+    <!-- 📊 DASHBOARD CARDS -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card text-white bg-primary shadow">
+                <div class="card-body text-center">
+                    <h5>Total Students</h5>
+                    <h2>{{ total_students }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card text-white bg-success shadow">
+                <div class="card-body text-center">
+                    <h5>Total Courses</h5>
+                    <h2>{{ total_courses }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SEARCH -->
+    <form action="/search" method="GET" class="mb-3 d-flex">
+        <input type="text" name="q" class="form-control me-2" placeholder="Search by name or course">
+        <button class="btn btn-success">Search</button>
+    </form>
+<div class="mb-3">
+    <a href="/export/excel" class="btn btn-success">📊 Download Excel</a>
+    <a href="/export/pdf" class="btn btn-danger">📄 Download PDF</a>
+</div>
+    <a href="/" class="btn btn-secondary mb-3">Reset</a>
+
+    <div class="d-flex justify-content-between mb-3">
+        <h4>Student List</h4>
+        <a href="/add" class="btn btn-primary">➕ Add Student</a>
+    </div>
+
+    <div class="card shadow">
+        <div class="card-body">
+
+            <table class="table table-striped table-hover text-center">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Age</th>
+                        <th>Course</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for s in students %}
+                    <tr>
+                        <td>{{ s[0] }}</td>
+                        <td>{{ s[1] }}</td>
+                        <td>{{ s[2] }}</td>
+                        <td>{{ s[3] }}</td>
+                        <td>
+                            <a href="/edit/{{ s[0] }}" class="btn btn-warning btn-sm">Edit</a>
+                            <a href="/delete/{{ s[0] }}" class="btn btn-danger btn-sm">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
