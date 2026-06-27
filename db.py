@@ -1,51 +1,40 @@
-import pyodbc
+import sqlite3
 
-conn = pyodbc.connect(
-    "Driver={SQL Server};"
-    "Server=DESKTOP-2DSPB68\\SQLEXPRESS;"
-    "Database=StudentDB;"
-    "Trusted_Connection=yes;"
-)
-
+# Create DB connection
+conn = sqlite3.connect("students.db", check_same_thread=False)
 cursor = conn.cursor()
 
-# CREATE TABLE (run once)
-def create_table():
-    cursor.execute("""
-        IF NOT EXISTS (
-            SELECT * FROM sysobjects WHERE name='Students' AND xtype='U'
-        )
-        CREATE TABLE Students (
-            id INT IDENTITY(1,1) PRIMARY KEY,
-            name NVARCHAR(100),
-            age INT,
-            course NVARCHAR(100)
-        )
-    """)
-    conn.commit()
+# Create table if not exists
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS students (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT,
+    age INTEGER,
+    course TEXT
+)
+""")
+conn.commit()
+
 
 # INSERT
 def insert_student(name, age, course):
-    cursor.execute(
-        "INSERT INTO Students (name, age, course) VALUES (?, ?, ?)",
-        (name, age, course)
-    )
+    cursor.execute("INSERT INTO students (name, age, course) VALUES (?, ?, ?)", (name, age, course))
     conn.commit()
 
-# READ
+
+# VIEW
 def view_students():
-    cursor.execute("SELECT * FROM Students")
+    cursor.execute("SELECT * FROM students")
     return cursor.fetchall()
+
 
 # UPDATE
 def update_student(id, name, age, course):
-    cursor.execute(
-        "UPDATE Students SET name=?, age=?, course=? WHERE id=?",
-        (name, age, course, id)
-    )
+    cursor.execute("UPDATE students SET name=?, age=?, course=? WHERE id=?", (name, age, course, id))
     conn.commit()
+
 
 # DELETE
 def delete_student(id):
-    cursor.execute("DELETE FROM Students WHERE id=?", (id,))
+    cursor.execute("DELETE FROM students WHERE id=?", (id,))
     conn.commit()
